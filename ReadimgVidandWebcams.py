@@ -3,23 +3,55 @@
 
 import cv2 
 import numpy as np
-
+from time import sleep
 
 def readImg():
     img = cv2.imread("Resources\lena.png")
     cv2.imshow("Title Name",img)
     cv2.waitKey(0)
-
+count =0 
 def readVid():
+    path = "Resources/test_video.mp4"
+    #path = "D:/videoplayback (1).mp4"
+    path = "D:/videoplayback.mp4"
+    cap = cv2.VideoCapture(path)
 
-    cap = cv2.VideoCapture("Resources\test_video.mp4")
+    #Gitting Frames per second
+    fps = cap.get(cv2.CAP_PROP_FPS) 
 
+    #get total frame count 
+    frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+
+    #time period of the video is
+    duration = float(frame_count)/float(fps)
+    m = int(duration//60)
+    s = duration %60
+
+    time = 0
+    count = 0
+    
     while True:
             #   this read funtion will read and return the (Succes <type bool>) which tells videos is playing , and img
         success , img = cap.read()
         if not success:
             break
-    
+        width , height ,_ = np.shape(img)
+        pos = (int(width*0.1) , int(height*0.47))
+
+        count +=1 # count fps 
+        if count == int(fps): #if count of fps in vid is equal to time is increased by 1:
+            count = 0 
+            time+=1
+        minutes = time//60 
+        seconds = time%60 
+
+        hours = minutes//60 
+        minutes = minutes%60
+
+        display_time = "Time: "+str(hours)+"h:" +str(minutes)+"m:"+str(seconds)+"s"
+        img = cv2.putText(img ,text = display_time , org = pos ,fontFace= cv2.FONT_HERSHEY_SIMPLEX ,fontScale=1,color = (0,0 ,0), thickness=2, )
+        
+        
         cv2.imshow("Name of video" , img)
 
         if cv2.waitKey(1) & 0xFF == ord('q') :
@@ -67,5 +99,5 @@ def readWebcam():
 
 if __name__ == '__main__':
     #readImg()
-    #readVid()
-    readWebcam()
+    readVid()
+    #readWebcam()
