@@ -49,7 +49,11 @@ def stock():
 
     img = cv2.imread('Resources/lena.png')
     imgGray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    imgStack = stackImages(0.5,([img,imgGray,img],[img,img,img]))
+    imghlc  = cv2.cvtColor(img , cv2.COLOR_BGR2HLS)
+    imgrbg  = cv2.cvtColor(img , cv2.COLOR_BGR2RGB)
+    imgxyz =  cv2.cvtColor(img , cv2.COLOR_BGR2XYZ)
+
+    imgStack = stackImages(0.5,([img,imgGray,imghlc],[imgrbg,imgxyz,img]))
 
     cv2.imshow("Stock Image" , imgStack)
     if cv2.waitKey(0)&0xFF == ord('q'):
